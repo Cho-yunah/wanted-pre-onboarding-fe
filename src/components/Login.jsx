@@ -1,40 +1,52 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import useLogin from '../hooks/useLogin';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useLogin();
+
   const [valueId, setValueId] = useState('');
   const [valuePw, setValuePw] = useState('');
   const [errors, setErrors] = useState({});
 
   const handleChange = (event) => {
+    console.log(event.target.id);
     if (event.target.id === 'id') {
       setValueId(event.target.value);
-    }
-    setValuePw(event.target.value);
+    } else setValuePw(event.target.value);
   };
 
   const handleLogin = () => {
     const errors = validationMessage({ email, password });
     setErrors(errors);
-    if (!Object.keys(errors).length) {
-      // login 로직 -> localstorage 저장
-      
-    }
+    console.log(Object.keys(errors).length);
+    // if (!Object.keys(errors).length) {
+    //   // login 로직 -> localstorage 저장
+    //   login().then(() => {
+    //     localStorage.setItem('email', JSON.stringify(valueId));
+    //     localStorage.setItem('password', JSON.stringify(valuePw));
+    //     navigate('/');
+    //   });
+    // }
   };
 
-  const validateEmail=(email) => {
-    let checkingEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return checkingEmail.test(email.toLowerCase())
-  }
+  const validateEmail = (email) => {
+    let checkingEmail =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    return checkingEmail.test(email.toLowerCase());
+  };
 
   const validationMessage = (values) => {
     const errors = {};
-    if(!values.email)errors.email= "이메일을 입력해주세요"
-    if(!values.password)errors.password= "비밀번호를 입력해주세요"
-    else if(!validateEmail(values.email))errors.email = '유효한 이메일 또는 비밀번호가 아닙니다'
-    return errors
+    if (!values.email) errors.email = '이메일을 입력해주세요';
+    if (!values.password) errors.password = '비밀번호를 입력해주세요';
+    else if (!validateEmail(values.email))
+      console.log(validateEmail(values.email));
+    errors.email = '유효한 이메일 또는 비밀번호가 아닙니다';
+    return errors;
   };
-
 
   return (
     <Container>
@@ -55,7 +67,9 @@ const Login = () => {
           placeholder="비밀번호를 입력하세요"
         />
         {errors.password && <p>{errors.password}</p>}
-        <SubmitButton onClick={handleLogin} disabled={'#'}>Login</SubmitButton>
+        <SubmitButton onClick={handleLogin} disabled={'#'}>
+          Login
+        </SubmitButton>
       </Section>
     </Container>
   );
