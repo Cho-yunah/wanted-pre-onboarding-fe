@@ -6,7 +6,6 @@ import HomePage from './Home';
 
 function LoginPage() {
   const { isLogin } = useLogin();
-  // console.log(isLogin);
 
   if (isLogin) {
     return <HomePage />;
